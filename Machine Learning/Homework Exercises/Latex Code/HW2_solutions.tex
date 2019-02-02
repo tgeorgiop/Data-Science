@@ -1,0 +1,175 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+
+%Here I define some theorem styles and shortcut commands for symbols I use often
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem*{rmk}{Remark}
+\newtheorem{lem}{Lemma}
+\newtheorem*{joke}{Joke}
+\newtheorem{ex}{Example}
+\newtheorem*{soln}{Solution}
+\newtheorem{prop}{Proposition}
+
+\newcommand{\lra}{\longrightarrow}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\surj}{\twoheadrightarrow}
+\newcommand{\graph}{\mathrm{graph}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\Z}{\bb{Z}}
+\newcommand{\Q}{\bb{Q}}
+\newcommand{\R}{\bb{R}}
+\newcommand{\C}{\bb{C}}
+\newcommand{\N}{\bb{N}}
+\newcommand{\M}{\mathbf{M}}
+\newcommand{\m}{\mathbf{m}}
+\newcommand{\MM}{\mathscr{M}}
+\newcommand{\HH}{\mathscr{H}}
+\newcommand{\Om}{\Omega}
+\newcommand{\Ho}{\in\HH(\Om)}
+\newcommand{\bd}{\partial}
+\newcommand{\del}{\partial}
+\newcommand{\bardel}{\overline\partial}
+\newcommand{\textdf}[1]{\textbf{\textsf{#1}}\index{#1}}
+\newcommand{\img}{\mathrm{img}}
+\newcommand{\ip}[2]{\left\langle{#1},{#2}\right\rangle}
+\newcommand{\inter}[1]{\mathrm{int}{#1}}
+\newcommand{\exter}[1]{\mathrm{ext}{#1}}
+\newcommand{\cl}[1]{\mathrm{cl}{#1}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\vol}{\mathrm{vol}}
+\newcommand{\cnt}{\mathrm{ct}}
+\newcommand{\osc}{\mathrm{osc}}
+\newcommand{\LL}{\mathbf{L}}
+\newcommand{\UU}{\mathbf{U}}
+\newcommand{\support}{\mathrm{support}}
+\newcommand{\AND}{\;\wedge\;}
+\newcommand{\OR}{\;\vee\;}
+\newcommand{\Oset}{\varnothing}
+\newcommand{\st}{\ni}
+\newcommand{\wh}{\widehat}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+
+
+\begin{document}
+
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 2 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+
+
+\subsection*{Exercises for Unit 2: Classification and Statistics concepts}
+
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 3}}
+\vspace{0.1 cm}
+
+\noindent
+Consider the following non linear model:
+\begin{equation}
+y = 3x_1^2 + 4x_2^2 + 5x_3^2 + 7x_1x_2 + x_1x_3 \\
++ 4x_2x_3 - 2 x_1 - 3x_2 - 5x_3 + \eta.
+\end{equation}
+The suitable function $\phi$ that transforms the problem to a space where the problem of estimating the model becomes linear is
+
+\begin{equation}
+\bm{\phi}(x) = \begin{bmatrix}
+x_{1}^2  \\
+x_2^2 \\
+x_3^2 \\
+x_1x_2 \\
+x_1x_3\\
+x_2x_3\\
+x_1\\
+x_2\\
+x_3\\
+\end{bmatrix}.
+\end{equation}
+With this transformation the $2$-dimensional space becomes $9$-dimensional space and the problem is now linear.
+
+\vspace{0.5 cm}
+\noindent
+{\underline{\large Solution for exercise 4}}
+\vspace{0.3 cm}
+
+\noindent
+For $\bm{x} = [x_1,x_2,x_3]^T$, consider the following non linear classification task:
+\begin{equation}
+x_1^2 + 3x_2^2 + 6x_3^2 + x_1x_2 + x_2x_3 > (<)3 \rightarrow \bm{x} \in \omega_1 (\omega_2).
+\end{equation}
+The suitable function $\phi$ that transforms the problem to a space where the problem
+of estimating the border of the two classes becomes linear is
+
+\begin{equation}
+\bm{\phi}(x) = \begin{bmatrix}
+x_{1}^2  \\
+x_2^2 \\
+x_3^2 \\
+x_1x_2 \\
+x_2x_3\\
+\end{bmatrix}.
+\end{equation}
+
+\noindent
+The dimension of the original space is $2$ and the dimension of the transformed space in which the problem is linear, is $5$.
+
+\newpage
+
+\vspace{0.5 cm}
+\noindent
+{\underline{\large Solution for exercise 6}}
+\vspace{0.3 cm}
+
+\noindent
+Let $x, y$ be two random variables with sample spaces $X = \{x_1,x_2,\dots,x_{n_x}\}$ and $Y = \{y_1,y_2,\dots,y_{n_y}\}$ respectively. Moreover, we denote $n$ the total number of experiments and as $\{n_1^X,n_2^X,\dots,n_{n_x}^X\}$ the probabilities of occurence of $x_1,x_2,\dots,x_{n_x}$. Similarly, we denote as  $\{n_1^Y,n_2^Y,\dots,n_{n_y}^Y\}$ the probabilities of occurence of $y_1,y_2,\dots,y_{n_y}$. Finally, we denote as $n_{ij}$ the number of the times that the value $x_i$ and $y_j$ occured simultaneously. The joint probability can be approximated as $P(x,y) \approx \frac{n_{ij}}{n}$. The total number $n_i^X$ that value $x_i$ has occured is $n_i^X = \sum_{i=1}^{n_y}n_{ij}$. Dividing both sides by $n$ gives
+\begin{equation}
+P(x) = \sum_{y\in Y}P(x,y).
+\end{equation}
+
+\noindent
+The conditional probability $P(A|B)$ is defined as
+\begin{equation}
+P(A|B) = \frac{n_{AB}}{n} \frac{n}{n_B} = \frac{n_{AB}}{n_B}.
+\end{equation}
+So, for the product rule, we can write
+\begin{equation}
+P(A|B)p(B) = \frac{n_{AB}}{n_B}\frac{n_B}{n} = \frac{n_{AB}}{n} = P(A,B).
+\end{equation}
+Using the product rule, we can verify the Bayes rule
+\begin{equation}
+P(A|B)p(B) = \frac{n_{AB}}{n_B}\frac{n_B}{n} = \frac{n_{AB}}{n_A}\frac{n_A}{n} = P(B|A)p(A).
+\end{equation}
+So,
+\begin{equation}
+P(B|A) = \frac{P(A|B)P(B)}{P(A)}.
+\end{equation}
+\end{document}
+
+

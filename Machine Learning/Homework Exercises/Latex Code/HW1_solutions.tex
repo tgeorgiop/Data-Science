@@ -1,0 +1,215 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+
+%Here I define some theorem styles and shortcut commands for symbols I use often
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem*{rmk}{Remark}
+\newtheorem{lem}{Lemma}
+\newtheorem*{joke}{Joke}
+\newtheorem{ex}{Example}
+\newtheorem*{soln}{Solution}
+\newtheorem{prop}{Proposition}
+
+\newcommand{\lra}{\longrightarrow}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\surj}{\twoheadrightarrow}
+\newcommand{\graph}{\mathrm{graph}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\Z}{\bb{Z}}
+\newcommand{\Q}{\bb{Q}}
+\newcommand{\R}{\bb{R}}
+\newcommand{\C}{\bb{C}}
+\newcommand{\N}{\bb{N}}
+\newcommand{\M}{\mathbf{M}}
+\newcommand{\m}{\mathbf{m}}
+\newcommand{\MM}{\mathscr{M}}
+\newcommand{\HH}{\mathscr{H}}
+\newcommand{\Om}{\Omega}
+\newcommand{\Ho}{\in\HH(\Om)}
+\newcommand{\bd}{\partial}
+\newcommand{\del}{\partial}
+\newcommand{\bardel}{\overline\partial}
+\newcommand{\textdf}[1]{\textbf{\textsf{#1}}\index{#1}}
+\newcommand{\img}{\mathrm{img}}
+\newcommand{\ip}[2]{\left\langle{#1},{#2}\right\rangle}
+\newcommand{\inter}[1]{\mathrm{int}{#1}}
+\newcommand{\exter}[1]{\mathrm{ext}{#1}}
+\newcommand{\cl}[1]{\mathrm{cl}{#1}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\vol}{\mathrm{vol}}
+\newcommand{\cnt}{\mathrm{ct}}
+\newcommand{\osc}{\mathrm{osc}}
+\newcommand{\LL}{\mathbf{L}}
+\newcommand{\UU}{\mathbf{U}}
+\newcommand{\support}{\mathrm{support}}
+\newcommand{\AND}{\;\wedge\;}
+\newcommand{\OR}{\;\vee\;}
+\newcommand{\Oset}{\varnothing}
+\newcommand{\st}{\ni}
+\newcommand{\wh}{\widehat}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+
+
+\begin{document}
+
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 1 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+
+
+\subsection*{Exercises for Unit 1: General concepts and Problem formulation}
+
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+\begin{enumerate}[label=(\alph*)]
+	\item Consider the parametric set of the quadratic functions $f_\theta:\R \rightarrow \R$. That is, for a given $\bm{x} = [x_1]^T \in \R$ it is
+	\begin{equation*}
+	f_\theta(x) = \theta_0 + \theta_1x_1 + \theta_2x_1^2.
+	\end{equation*}
+	For $\bm{\theta} = [1,2,3]^T$ we have
+	$f_{\theta{_1}}(x) = 1 + 2x_1 + 3x_2$.
+	
+	\item Consider the parametric set of the 3rd degree polynomials $f_\theta:\R^2 \rightarrow \R$. That is, for a given $\mathbf{x} = [x_1,x_2]^T \in \R$ it is
+	\begin{equation*}
+	f_\theta(x) = \theta_0 + \theta_1x_1^3 + \theta_2x_2^3 + \theta_3x_1^2x_2 + \theta_4x_1x_2^2 + \theta_5x_1^2 + \theta_6x_2^2 + \theta_7x_1x_2 + \theta_8x_1 + \theta_9x_2.
+	\end{equation*}
+	For $\bm{\theta} = [1,2,3,4,5,6,7,8,9,10]^T$ we have
+	$f_{\theta{_1}} = 1 + 2x_1^3 + 3x_2^3 + 4x_1^2x_2 + 5x_1x_2^2 + 6x_1^2 + 7x_2^2 + 8x_1x_2 + 9x_1 + 10x_2$.
+	
+	\item Consider the parametric set of the 3rd degree polynomials $f_\theta:\R^3 \rightarrow \R$. That is, for a given $\bm{x} = [x_1,x_2,x_3]^T \in \R$ it is
+	\begin{equation*}
+	\begin{aligned}
+	f_\theta(x) &= \theta_0 +
+	 \theta_1x_1^3 +
+	  \theta_2x_2^3 +
+	   \theta_3x_3^3 +
+	    \theta_4x_1^2x_2 +
+	     \theta_5x_1x_2^2 +
+	      \theta_6x_1^2x_3 +
+	       \theta_7x_1x_3^2 +
+	        \theta_8x_2^2x3 +
+	         \theta_9x_2x_3^2 + \\
+	          &\theta_{10}x_3^2x_1 +
+	           \theta_{11}x_1x_2x_3 + 
+	           \theta_{12}x_1^2 +
+	           \theta_{13}x_2^2 +
+	           \theta_{14}x_3^2 +
+	           \theta_{15}x_1x_2 +
+	           \theta_{16}x_2x_3 +
+	           \theta_{17}x_1x_3 +
+	           \theta_{18}x_1 + \\
+	           &\theta_{19}x_2 +
+	           \theta_{20}x_3.
+	\end{aligned}
+	\end{equation*}	
+\end{enumerate}
+\vspace{0.5 cm}
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+\noindent
+Let $\bm{\theta} = [\theta_1,\theta_2,\dots,\theta_l]^T$ and $\bm{x} = [x_1,x_2,\dots,x_l]^T$. We have
+\begin{equation}
+\bm{(\theta^Tx)x} = \left( \sum_{i=1}^l\theta_ix_i \right) [x_1,x_2,\dots,x_l]^T =
+\begin{bmatrix}
+x_{1}\left( \sum_{i=1}^l\theta_ix_i \right) \\
+x_{2}\left( \sum_{i=1}^l\theta_ix_i \right) \\
+\vdots \\
+x_{l}\left( \sum_{i=1}^l\theta_ix_i \right)
+\end{bmatrix}.
+\end{equation}
+Moreover,
+\begin{equation}
+\bm{(xx^T)\theta} =
+\begin{bmatrix}
+x_{1}^2 & x_1x_2 & \dots & x_1x_l \\
+x_2x_1 & x_2^2 & \dots & x_2x_l \\
+\vdots \\
+x_{l}x_1 & x_lx_2 & \dots & x_l^2
+\end{bmatrix}
+\begin{bmatrix}
+\theta_1 \\
+\theta_2\\
+\vdots \\
+\theta_l
+\end{bmatrix}
+ =
+  \begin{bmatrix}
+  x_1^2\theta_1 + x_1x_2\theta_2 + \dots +x_1x_l\theta_l \\
+  x_2x_1\theta_1 + x_2^2\theta_2 + \dots +x_2x_l\theta_l\\
+  \vdots \\
+  x_lx_1\theta_1 + x_lx_2\theta_2 + \dots +x_l^2\theta_l
+  \end{bmatrix}
+\end{equation}
+From $(1),(2)$, we have
+\begin{equation*}
+\bm{(\theta^Tx)x} = \bm{(xx^T)\theta}.
+\end{equation*} 
+\vspace{0.5 cm}
+{\underline{\large Solution for exercise 3}}
+\vspace{0.3 cm}
+
+\noindent
+Let $\bm{X} = [\bm{x_1}^T,\bm{x_2}^T,\dots,\bm{x_N}^T]^T$ and $\bm{y}=[y_1,y_2,\dots,y_n]^T$. We have
+\begin{equation*}
+\bm{X}^T\bm{X} = \bm{x_1x_1}^T + \bm{x_2x_2}^T + \dots + \bm{x_nx_n}^T = \sum_{i=1}^{N}\bm{x}_n\bm{x}_n^T.
+\end{equation*}
+Additionally,
+\begin{equation*}
+\bm{X}^T\bm{y} = \bm{x_1}y_1 + \bm{x_2}y_2 + \dots + \bm{x_n}y_n = \sum_{i=1}^{N}y_n\bm{x}_n.
+\end{equation*}
+\vspace{0.5 cm}
+{\underline{\large Solution for exercise 4}}
+\vspace{0.3 cm}
+
+\noindent
+We have one dataset $\{(x_i,y_i), x_i\in R, y_i \in R, i=1,\dots,5\}$ with the values \\ $\{(2,2.01),(4, 4.01), (-2, -2.01), (-3, -3.01), (-1, -1.01)\}$. So, $\bm{X} = \begin{bmatrix}
+1 & 2 \\
+1 & 4\\
+1 & -2 \\
+1 & -3 \\
+1 & -1
+\end{bmatrix}$, \\
+$\bm{y} = \begin{bmatrix}
+2.01 \\
+4.01\\
+-2.01  \\
+-3.01 \\
+-1.01
+\end{bmatrix}$ and we want to find $\bm{\theta}=[\theta_0,\theta_1]$. The Least Squares (LS) estimator, which minimizes the mean of square error, gives
+\begin{equation*}
+\bm{\theta}= (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}.
+\end{equation*}
+So, $\bm\theta = [-0.002,1.003]$.
+\end{document}
+
+
