@@ -1,0 +1,196 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 3 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\subsection*{Exercises for Unit 3: Estimators and Regularization}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+Consider the Lagrangian function of the ridge regression problem:
+\begin{equation}
+\min L(\theta) = \sum_{n=1}^{N}(y_n-\bm{\theta}^T\mathbf{x}_n)^2 + \lambda \norm{\bm{\theta}}^2.
+\end{equation}
+
+We take the gradient of $L(\bm{\theta})$ with respect to $\bm{\theta}$, equate to $0$ and solve.
+
+\begin{align}
+\frac{\partial L(\bm{\theta)}}{\partial \bm{\theta}} = 0 \nonumber \\ 
+2\sum_{n=1}^{N}(y_n-\bm{\theta}^T \mathbf{x_n})(-\mathbf{x_n}) + 2\lambda\bm{\theta} = 0 \nonumber \\
+2 \sum_{n=1}^{N}(\mathbf{x_n}\mathbf{x_n}^T\bm{\theta} - \mathbf{x_n}y_n) + 2\lambda\bm{\theta} = 0 \nonumber \\
+2 \sum_{n=1}^{N}(\mathbf{x_n}\mathbf{x_n}^T\bm{\theta}) - 2 \sum_{n=1}^{N}(y_n\mathbf{x_n}) + 2\lambda\bm{\theta} = 0 \nonumber \\
+\sum_{n=1}^{N}(\mathbf{x_n}\mathbf{x_n}^T + \lambda \mathbf{I} )\bm{\theta} = \sum_{n=1}^{N}y_n\mathbf{x}_n
+\end{align}
+\\
+We can find the matrix from of the solution too. Let $\bm{X} = [\bm{x_1}^T,\bm{x_2}^T,\dots,\bm{x_N}^T]^T$ and $\bm{y}=[y_1,y_2,\dots,y_n]^T$. We have
+\begin{equation*}
+\bm{X}^T\bm{X} = \bm{x_1x_1}^T + \bm{x_2x_2}^T + \dots + \bm{x_nx_n}^T = \sum_{i=1}^{N}\bm{x}_n\bm{x}_n^T.
+\end{equation*}
+Additionally,
+\begin{equation*}
+\bm{X}^T\bm{y} = \bm{x_1}y_1 + \bm{x_2}y_2 + \dots + \bm{x_n}y_n = \sum_{i=1}^{N}y_n\bm{x}_n.
+\end{equation*}
+
+So, the ridge regression solution can be written as
+
+\begin{equation*}
+\bm{\theta} = (\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I})^{-1}\mathbf{X}^T\mathbf{y}
+\end{equation*}
+
+\newpage
+
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+Consider a 1-dimensional parameter estimation problem, where the true parameter value is $\theta_o$. Let $\hat{\theta}_{MVU}$ be a minimum variance unbiased estimator of $\theta_o$. Consider the parametric set $F$ of all estimators of the form
+\begin{equation*}
+\hat{\theta}_{b} = (1+a)\hat{\theta}_{MVU}
+\end{equation*}
+with $a \in \mathbb{R}$.
+
+\begin{enumerate}[label=(\alph*)]
+	\item The $\hat{\theta}_{MVU}$ is an unbiased estimator of $\theta_o$. So, the MSE depends only on the variance of the estimator.
+	\item We have $E[\hat{\theta}_{MVU}] = \theta_o$. So, $E[\hat{\theta}_{b}] = (1+a)\theta_o$ and for $a \neq 0$, all $\hat{\theta}_{b}$ estimators are biased.
+	\item We have $MSE(\hat{\theta}_{MVU}) = E[(\hat{\theta}_{MVU} - E[\hat{\theta}_{MVU}])^2]$. MSE in order to be zero, it must have zero variance. For a finite number N, this is impossible because datasets have to be the same which is not the case.
+	\item We have
+	\begin{align*}
+	MSE(\hat{\theta}_{b}) &= E[(\hat{\theta}_{b} - \theta_o)^2] \\
+	&= E[((\hat{\theta}_{b}-E[\hat{\theta}_{b}]) + (E[\hat{\theta}_{b}] - \theta_o))^2] \\
+	&= E[(\hat{\theta}_{b}-E[\hat{\theta}_{b}])^2] + E[(\hat{\theta}_{b} - \theta_o)^2] \\
+	&= E[((1+a)\hat{\theta}_{MVU}-E[(1+a)\hat{\theta}_{MVU})^2]] + (E[(1+a)\hat{\theta}_{MVU}] - \theta_o)^2 \\
+	&= (1+a)^2MSE(\hat{\theta}_{MVU}) + a^2\theta_o^2
+	\end{align*}
+	\item In order to have less MSE for the biased estimator, it has to
+	\begin{align*}
+	MSE(\hat{\theta}_{b}) < MSE(\hat{\theta}_{MVU}) \iff \\
+	(1+a)^2MSE(\hat{\theta}_{MVU}) + a^2\theta_o^2 < MSE(\hat{\theta}_{MVU}) \iff \\
+	a^2(MSE(\hat{\theta}_{MVU}) + \theta_o^2) + 2aMSE(\hat{\theta}_{MVU})<0 \iff \\
+	a\left[a + \frac{2MSE(\hat{\theta}_{MVU})}{\theta_o^2 + MSE(\hat{\theta}_{MVU})}\right] < 0
+	\end{align*}
+	So, in order to get $MSE(\hat{\theta}_{b}) < MSE(\hat{\theta}_{MVU})$, $a$ must be in the range
+	\begin{equation*}
+	-\frac{2MSE(\hat{\theta}_{MVU})}{\theta_o^2 + MSE(\hat{\theta}_{MVU})} < a <0.
+	\end{equation*}
+	\item From (e) we have that $a+1<1$. So, $|a+1|<1$. We multiply each side with $|\hat{\theta}_{MVU}|$ gives $|a+1||\hat{\theta}_{MVU}|<|\hat{\theta}_{MVU}|$. So, $|\hat{\theta}_{b}|<|\hat{\theta}_{MVU}|$.
+	\item The minimum value of 
+	\begin{equation*}
+	MSE(\hat{\theta}_{b}) = (1+a)^2MSE(\hat{\theta}_{MVU}) + a^2\theta_o^2
+	\end{equation*}
+	with respect to a occurs when the derivative becomes zero, that is when
+	\begin{equation*}
+	2(1-a)MSE(\hat{\theta}_{MVU}) + 2a\theta_o^2 = 0,
+	\end{equation*}
+	or, equivalently, when 
+	\begin{equation*}
+	a_* = - \frac{MSE(\hat{\theta}_{MVU})}{\theta_o^2 + MSE(\hat{\theta}_{MVU})}.
+	\end{equation*}
+	\item In practice, $a_*$ cannot be determined because $\theta_o$ is unknown.
+\end{enumerate}
+
+\vspace{0.3 cm}
+{\underline{\large Solution for exercise 3}}
+\vspace{0.3 cm}
+
+Consider a set N pairs $(y_n,x_n),n=1,\dots,N$, satisfying the equation
+\begin{equation}
+y_n = \bm{\theta_o}^T\bm{x}_n + \eta_n, \ \eta_n \sim \mathcal{N}(0,\,\sigma^{2})\,.
+\end{equation}
+As we know, the LS estimator satisfies the equation 
+\begin{equation}
+(\sum_{n=1}^{N}\bm{x}_n\bm{x}_n^T)\bm{\theta} = \sum_{n=1}^{N}y_n\bm{x}_n.
+\end{equation}
+Consider now the special case where the $\bm{\theta}$ is a scalar and $\bm{x}_n=1$ for all $n$. In this case, we have
+\begin{equation}
+y_n = \theta_o + \eta_n.
+\end{equation}
+\begin{enumerate}[label=(\alph*)]
+	\item The LS estimator of $\theta_o$ for this case where all $\bm{x}_n$'s are now scalars equal to $1$ is
+	\begin{equation*}
+	N\hat{\theta} = \sum_{n=1}^{N} y_n \iff \hat{\theta}=\frac{1}{N} \sum_{n=1}^{N} y_n.
+	\end{equation*}
+	\item We have
+	\begin{equation*}
+	E[y_n]=E[\theta_o + \eta_n] = \theta_o.
+	\end{equation*}
+	So, the $y_n$ is an unbiased estimator of $\theta_o$.
+	\item We have
+	\begin{equation*}
+	E[\overline{y}] = E[\frac{1}{N}\sum_{n=1}^{N}y_n] = \frac{1}{N}\sum_{n=1}^{N}E[\theta_o + \eta_n] = \frac{1}{N}\sum_{n=1}^{N} \theta_o = \theta_o.
+	\end{equation*}
+	So, $\overline{y}$ is an unbiased estimator of $\theta_o$.
+	\item The $\overline{y}$ is the LS estimator for the 1-dimensional case. It is also the minimum variance unbiased estimator and we denote it as $\hat{\theta}_{MVU}$.
+	\item We know that
+	\begin{equation*}
+	\sum_{n=1}^{N}(\mathbf{x_n}\mathbf{x_n}^T + \lambda \mathbf{I} )\bm{\theta} = \sum_{n=1}^{N}y_n\mathbf{x}_n.
+	\end{equation*}
+	So, for our case that $x_n=1$ for every $n$, we have
+	\begin{equation*}
+	(N + \lambda)\hat{\theta}_{ridge} = \sum_{n=1}^{N}y_n \iff \hat{\theta}_{ridge} = \frac{\sum_{n=1}^{N}y_n}{N+\lambda}.
+	\end{equation*}
+	\item We have
+	\begin{equation}
+	\hat{\theta}_{MVU}=\frac{1}{N} \sum_{n=1}^{N} y_n
+	\end{equation}  and 
+	\begin{equation}
+	\hat{\theta}_{ridge} = \frac{\sum_{n=1}^{N}y_n}{N+\lambda}.
+	\end{equation}
+	From (6),(7) we have
+	\begin{equation*}
+	\hat{\theta}_{ridge} = \frac{N\hat{\theta}_{MVU}}{N+\lambda}.
+	\end{equation*}
+	\item We know that $E[\hat{\theta}_{MVU}]=\theta_o$. So,
+	\begin{equation*}
+	E[\hat{\theta}_{ridge}] = E[\frac{N\hat{\theta}_{MVU}}{N+\lambda}] = \frac{N}{N+\lambda} \theta_o \neq \theta_o.
+	\end{equation*}
+	So, the ridge estimator is biased.
+	\item It is 
+	\begin{equation*}
+		|\hat{\theta}_{ridge}| = |\frac{N}{N+\lambda}||\hat{\theta}_{MVU}|.
+	\end{equation*}
+	Since $|\frac{N}{N+\lambda}|<1$, for $\lambda>0$, we have
+	\begin{equation*}
+	|\hat{\theta}_{ridge}|<|\hat{\theta}_{MVU}|.
+	\end{equation*}
+	\end{enumerate}
+
+\end{document}
+
+
