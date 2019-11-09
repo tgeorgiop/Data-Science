@@ -1,0 +1,128 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 5 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\subsection*{Exercises for Unit 5: Pdf estimation - Inference}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+
+We have the Erlang distribution $p(x) = \theta^2 x \exp(-\theta x) u(x)$, where $u(x)=1(0)$, if $x\geq 0(< 0)$, with $E[x] = 2/ \theta$.
+\begin{enumerate}[label=(\alph*)]
+	\item Given a set of $N$ measurements we can calculate the ML estimate of $\theta$ as follows. Firstly, we calculate the log-likelihood
+	\begin{align*}
+	L(\theta) &=\ln \left( \prod_{i=1}^{N}\theta^2 x_i \exp(-\theta x_i) u(x_i) \right) \\
+	&= \sum_{i=1}^{N} \ln \left(\theta^2 x_i \exp(-\theta x_i) u(x_i) \right)
+	\end{align*}
+	For $x\geq0$,
+	\begin{align*}
+	L(\theta) &= \sum_{i=1}^{N} \ln\theta^2 + \sum_{i=1}^{N}\ln x_i - \theta \sum_{i=1}^{N}x_i \\ 
+	&= 2N\ln\theta + \sum_{i=1}^{N}\ln x_i - \theta \sum_{i=1}^{N}x_i .
+	\end{align*}
+	We find the derivative of the log-likelihood with respect to $\theta$
+	\begin{align*}
+	\frac{\partial L(\theta)}{\partial \theta} = \frac{2N}{\theta_{ML}} - \sum_{i=1}^{N} x_i
+	\end{align*}
+	and we set it to zero. So,
+	\begin{align*}
+	\frac{\partial L(\theta)}{\partial \theta} = 0  \iff \theta_{ML} = \frac{2N}{\sum_{i=1}^{N} x_i}.
+	\end{align*}
+	\item For $N=5$ we have $x_1=2, x_2=2.2, x_3=2.7, x_4=2.4, x_5=2,6$. From (a), we have
+	\begin{align*}
+	\theta_{ML} = \frac{10}{11.9} = 0.84
+	\end{align*}
+	and
+	\begin{align*}
+	E[x] = \frac{2}{\theta_{ML}} = \frac{2}{0.84} = 2.38
+	\end{align*}
+\end{enumerate}
+
+\newpage
+
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+We have again the Erlang distribution $p(x) = \theta^2 x \exp(-\theta x) u(x)$, where $u(x)=1(0)$, if $x\geq 0(< 0)$, a set of N measurements $x_1,\dots,x_n$ for the random variable $x$ that follows Erlang distribution, and we know the a priori probability for $\theta$, such that $\theta\sim \mathcal{N}(\theta_0,\sigma_0^2)$ with $\theta_0$ and $\sigma_0$ known.
+
+\begin{enumerate}[label=(\alph*)]
+\item The MAP estimate is
+\begin{align*}
+\hat{\theta}_{MAP} = \arg\max_{\theta}p(\theta)p(x|\theta).
+\end{align*}
+It is convenient to maximize the logarithm of the product. So,
+\begin{align*}
+\hat{\theta}_{MAP} &= \arg\max_{\theta}\ln \left(p(\theta)p(x|\theta)\right) \\ &= \arg\max_{\theta}\left(\ln p(\theta) + \ln p(x|\theta)\right) \\ &= \arg\max_{\theta}\left(\ln p(\theta) + \ln \sum_{i=1}^{N} p(x_i|\theta)\right).
+\end{align*}
+We find the derivative of the sum and we set it to zero. For the second term, we have calculated it for the exercise 1.
+\begin{align*}
+-\frac{1}{2\sigma_0^2}2(\theta_{MAP}-\theta_0)(-1) + \frac{2N}{\theta_{MAP}} - \sum_{i=1}^{N} x_i &= 0 
+\end{align*}
+\begin{align}
+\frac{\theta_{MAP}-\theta_0}{\sigma_0^2}+ \frac{2N}{\theta_{MAP}} - \sum_{i=1}^{N} x_i &= 0
+\end{align}
+\begin{align*}
+\theta_{MAP}^2  - \theta_0\theta_{MAP} + 2N\sigma_0^2 - \theta_{MAP} \sum_{i=1}^{N} x_i &= 0
+\end{align*}
+Finally,  
+\begin{align*}
+\theta_{MAP} = \frac{1}{2} \left((\theta_0-\sigma_0^2\sum_{i=1}^{N}x_i) + \sqrt{(\theta_0-\sigma_0^2\sum_{i=1}^{N}x_i)^2 + 8N\sigma_0^2}\right).
+\end{align*}
+\item For $N \rightarrow \infty$, if we divide (1) by $N$ we observe that
+\begin{align*}
+\theta_{MAP} \rightarrow \frac{2N}{\sum_{i=1}^{N} x_i} = \theta_{ML}.
+\end{align*}
+For $\sigma_0^2 >>$, from (1) we observe the same as before
+\begin{align*}
+\theta_{MAP} \rightarrow \frac{2N}{\sum_{i=1}^{N} x_i} = \theta_{ML}.
+\end{align*}
+For $\sigma_0^2 <<$, if we multiply (1) by $\sigma_0^2$, we observe that
+\begin{align*}
+\theta_{MAP} \rightarrow \theta_0.
+\end{align*}
+\end{enumerate}
+
+
+
+
+\end{document}
+
+
