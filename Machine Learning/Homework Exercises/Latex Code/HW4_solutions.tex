@@ -1,0 +1,97 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 4 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\subsection*{Exercises for Unit 4: Bias - Variance and Estimators}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+\begin{enumerate}[label=(\alph*)]
+\item A reasonable measure to quantify the performance of an estimator is its mean-square deviation from the optimal one. This quantity can be analysed as
+\begin{align*}
+E_D \left[(f(\pmb{x};D) - E[y|\pmb{x}])^2\right] &= E_D \left[(f(\pmb{x};D) - E_D[f(\pmb{x};D)] + E_D[f(\pmb{x};D)] - E[y|\pmb{x}])^2\right] \\
+&= \underbrace{E_D \left[(f(\pmb{x};D) - E_D[f(\pmb{x};D)] )^2\right]}_\text{variance} + \underbrace{\left(E_D[f(\pmb{x};D)] - E[y|\pmb{x}]\right)^2}_{\text{bias}^2}.
+\end{align*}
+
+The first term is the variance of the estimator arround its own mean value and the second term is the bias squared. To minimize the whole quantity we have to minimize variance and bias simultaneously. It turns out that this is not possible.
+\item For a fixed number of data points, trying to minimize the bias results in an increase of variance and vice versa. This happens because, in order to reduce the bias, you have to increase the complexity of the estimator. This, in turn, results in higher variance as we change the training sets. The only way to reduce both terms simultaneously is to increase the number of the training data points and at the same time increase the complexity of the model carefully. 
+\end{enumerate}
+
+
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+We have the regression task $y = g(x) + \eta$, where $y$ and $x$ are modeled by the joint pdf
+\begin{align*}
+	p(x,y) = \frac{3}{2}, x\in (0,1), y \in (x^2,1)
+\end{align*}
+
+\begin{enumerate}[label=(\alph*)]
+	\item We have the following integral
+	\begin{align*}
+	\int_{x} \int_{y} p(x,y) dx dy &= \int_x \left[\frac{3}{2}y\right]^1_{x^2} dx \\ &= \int_x \left( \frac{3}{2} - \frac{3}{2}x^2 \right)dx \\ &= \left[\frac{3}{2}x - \frac{1}{2}x^3 \right]^1_0 dx \\ &= 1.
+	\end{align*}
+	So, the $p(x,y)$ is a pdf.
+	\item The marginal pdf of $x$ is
+	\begin{align*}
+	p(x) = \int_y p(x,y) dy = \left[\frac{3}{2}y\right]^1_{x^2} = \frac{3}{2}(1-x^2).
+	\end{align*}
+	\item The conditional pdf of $y$ given $x$ is
+	\begin{align*}
+	p(y|x) = \frac{p(x,y)}{p(x)} = \frac{1}{1-x^2}
+	\end{align*}
+	\item We have
+	\begin{align*}
+	E[y|x] = \int_y yp(y|x)dy = \int_{x^2}^{1}y\frac{1}{1-x^2}dy = \frac{1}{1-x^2} \left[\frac{y^2}{2}\right]^1_{x^2} = \frac{1+x^2}{2}
+	\end{align*}
+	\\
+	\centering \includegraphics[scale=0.65]{1.png}
+\end{enumerate}
+
+
+
+
+
+
+\end{document}
+
+
