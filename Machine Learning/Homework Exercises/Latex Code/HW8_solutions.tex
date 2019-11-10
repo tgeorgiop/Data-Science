@@ -1,0 +1,129 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 8 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\begin{center}
+	\subsection*{Exercises for Unit 8: Logistic Regression classifier}
+\end{center}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+
+We have a dataset $Y = \{(y_i,\pmb{x_i},i=1,\dots,N)\}$ where $y_i \in \{0,1\}$ is the class label for vector $\pmb{x}_i \in R^l$. Lets extract the gradient descent logistic regression classifier. Because we have binary classification, the model is
+\begin{align*}
+\ln \frac{P(y=1|\pmb{x})}{P(y=0|\pmb{x})} = \pmb{\theta}^T\pmb{x}
+\end{align*}
+which becomes
+\begin{align*}
+P(y=1|\pmb{x}) = \frac{1}{1 + e^{\pmb{\theta}^T\pmb{x}}} = \sigma(\pmb{\theta}^T\pmb{x})
+\end{align*}
+using $P(y=0|\pmb{x})  = 1 - P(y=1|\pmb{x})$. The aim is to determine the $\pmb{\theta}$ that maximizes $P(y_i=1|\pmb{x}_i)$ for all $\pmb{x}_i$  with $y_i=1$ and maximizes $P(y_i=0|\pmb{x}_i)$ for all $\pmb{x}_i$  with $y_i=0$. So, we want to maximize the likelihood
+\begin{align*}
+\prod_{\pmb{x}_i:y_i=1}P(y_i=1|\pmb{x}_i)\prod_{\pmb{x}_i:y_i=0}P(y_i=0|\pmb{x}_i).
+\end{align*}
+We can make it simpler and maximize
+\begin{align*}
+\prod_{i=1}^{N}P(y_i=1|\pmb{x}_i)^{y_i}P(y_i=0|\pmb{x}_i)^{1-y_i} = \prod_{i=1}^{N}\sigma(\pmb{\theta}^T\pmb{x}_i)^{y_i} (1-\sigma(\pmb{\theta}^T\pmb{x}_i))^{1-y_i}.
+\end{align*}
+Because we will use gradient descent, we want to mizimize the negative log likelihood, which is
+\begin{align*}
+L(\pmb{\theta}) &= - \sum_{i=1}^{N}\left( \sigma(\pmb{\theta}^T\pmb{x}_i)^{y_i} + (1-\sigma(\pmb{\theta}^T\pmb{x}_i))^{1-y_i} \right) \\
+&= - \sum_{i=1}^{N}\left(y_i \ln ( \sigma(\pmb{\theta}^T\pmb{x}_i)) + (1-y_i)\ln (1-\sigma(\pmb{\theta}^T\pmb{x}_i)) \right).
+\end{align*}
+Taking the gradient with respect to $\pmb{\theta}$ and using $\frac{\partial \sigma(\pmb{\theta}^T\pmb{x}_i)}{\partial\pmb{ \theta}} = \sigma(\pmb{\theta}^T\pmb{x}_i)(1-\sigma(\pmb{\theta}^T\pmb{x}_i))$ gives
+\begin{align*}
+\nabla_{\pmb{\theta}}L(\pmb{\theta}) &= - \sum_{i=1}^{N} \left(  \frac{y_i}{\sigma(\pmb{\theta}^T\pmb{x}_i)}\sigma(\pmb{\theta}^T\pmb{x}_i)(1-\sigma(\pmb{\theta}^T\pmb{x}_i)) \pmb{x}_i - 
+\frac{1 - y_i}{1 - \sigma(\pmb{\theta^Tx}_i)}\sigma(\pmb{\theta}^T\pmb{x}_i)(1-\sigma(\pmb{\theta}^T\pmb{x}_i)) \pmb{x}_i \right) \\
+&= - \sum_{i=1}^{N} \left( y_i (1-\sigma(\pmb{\theta}^T\pmb{x}_i)) \pmb{x}_i - (1-y_i)\sigma(\pmb{\theta}^T\pmb{x}_i) \pmb{x}_i \right) \\
+&= - \sum_{i=1}^{N} \left( y_i (1-\sigma(\pmb{\theta}^T\pmb{x}_i)) - (1-y_i)\sigma(\pmb{\theta}^T\pmb{x}_i) \right)\pmb{x}_i \\
+&= - \sum_{i=1}^{N} (y_i - \sigma(\pmb{\theta}^T\pmb{x}_i))\pmb{x}_i \\
+&= \pmb{X}^T (\pmb{\sigma}(\pmb{\theta}^T\pmb{x})- \pmb{y})
+\end{align*}
+where $\pmb{X}^T = [\pmb{x_1}, \pmb{x_2}, \dots, \pmb{x}_N], \  \pmb{y} = [y_1,y_2,\dots,y_N], \pmb{\sigma}(\pmb{\theta^Tx}) = [\sigma(\pmb{\theta}^T\pmb{x}_1),\sigma(\pmb{\theta   }^T\pmb{x}_2),\dots, \sigma(\pmb{\theta}^T\pmb{x}_N)]$. So, for the steps of gradient descent we have
+\begin{align*}
+\pmb{\theta}_i = \pmb{\theta}_{i-1} -  \pmb{X}^T (\pmb{\sigma}(\pmb{\theta}^T\pmb{x})- \pmb{y}).
+\end{align*}
+
+
+\vspace{0.3 cm}
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+We have a dataset $Y = \{(y_i,\pmb{x_i}',i=1,\dots,N)\}$ where $y_i \in \{0,1\}$ is the class label for vector $\pmb{x}_i' \in R^l$. The $y$ and $\pmb{x}'$ are related such as: $y = f(\pmb{\theta}^T\pmb{ x}' + \theta_0)$ and $f(z) = 1/(1+\exp(-az))$.
+
+\begin{enumerate}[label=(\alph*)]
+	\item We plot the function $f(z)$ fot various values of the $a$.
+\begin{center}
+\includegraphics[scale=0.75]{2.png}
+\end{center}
+	\item The sum of error squares criterion is
+\begin{align*}
+J(\pmb{\theta}) = \sum_{i=1}^{N} \left(y_i - f(\pmb{\theta}^T\pmb{ x}_i') \right)^2
+\end{align*}
+and the gradient with respect to $\pmb{\theta}$ is
+\begin{align*}
+\nabla_{\pmb{\theta}} J(\pmb{\theta}) = 2a \sum_{i=1}^{N} \left(y_i - f(\pmb{\theta}^T\pmb{ x}_i') \right) \left( f(\pmb{\theta}^T\pmb{ x}_i') (1 - f(\pmb{\theta}^T\pmb{ x}_i')) \right) \pmb{x_i}'
+\end{align*}
+and we can use it for the gradient step
+\begin{align*}
+\pmb{\theta}_i = \pmb{\theta}_{i-1} - \nabla_{\pmb{\theta}} J(\pmb{\theta}_{i-1}).
+\end{align*}
+\item We can see that for clear 1 response of the model, we need $\exp(-a\pmb{\theta}^T\pmb{ x}_i') = 0$ which is not possible. Moreover, even if $\exp(-a\pmb{\theta}^T\pmb{ x}_i') \rightarrow +\infty$, the model can't response a clear 0.
+\item For a given $\pmb{x}$, if $f(\pmb{\theta}^T\pmb{ x}_i')) > 0.5$, we classify it to the class $y=1$ and for $\pmb{x}$, if $f(\pmb{\theta}^T\pmb{ x}_i')) < 0.5$, we classify it to the class $y=0$.
+\item A way for leading the model responses very close to 1 (for class 1
+vectors) or 0 (for class 0 vectors) could be to increase the parameter $a$ to approximate step function.
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
