@@ -1,0 +1,106 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 7 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\begin{center}
+	\subsection*{Exercises for Unit 7: Bayes Classifier}
+\end{center}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+
+We consider a two-class 1-dim classification problem of two equiprobable classes $\omega_1$ and $\omega_2$ that are modeled by the normal distributions $\mathcal{N}(0,1)$ and $\mathcal{N}(0,5)$, respectively. So, $p(x|\omega_1) \sim \mathcal{N}(0,1)$ and $p(x|\omega_2) \sim \mathcal{N}(0,5)$. To determine the decision regions $R_1$ and $R_2$ we can use the Bayes rule.
+\begin{align*}
+p(\omega_1|x) &> p(\omega_2|x) \iff \\ \frac{p(x|\omega_1)p(\omega_1)}{p(x)} &> \frac{p(x|\omega_2)p(\omega_2)}{p(x)}  \iff \\ p(x|\omega_1) &> p(x|\omega_2) \iff \\
+\frac{1}{\sqrt{2\pi}}e^{-\frac{(x-0)^2}{2}} &> \frac{1}{\sqrt{2\pi 5}}e^{-\frac{(x-0)^2}{10}} \iff \\
+-\frac{x^2}{2} + \frac{1}{2}\ln 5 &> -\frac{x^2}{10} \iff \\
+-4x^2 &>-5\ln5 \iff \\
+x^2 &< \frac{5\ln5}{4}
+\end{align*}
+So, the decision regions are $R_1 \left\{-\sqrt{\frac{5\ln5}{4}} < x < \sqrt{\frac{5\ln5}{4}}  \right\}$ and $R_2 \left\{x <-\sqrt{\frac{5\ln5}{4}} \text{ and } x > \sqrt{\frac{5\ln5}{4}}  \right\}$.
+
+
+
+\vspace{0.3 cm}
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+We have $p(\pmb{x}|\omega_1) \sim \mathcal{N}(\pmb{\mu_1},\pmb{\Sigma})$ and $p(\pmb{x}|\omega_2) \sim \mathcal{N}(\pmb{\mu_2},\pmb{\Sigma})$, where $\pmb{\Sigma}=\sigma^2 \pmb{I}$ and the priors $p(\omega_1) = p(\omega_2)$.
+
+\begin{enumerate}[label=(\alph*)]
+	\item We can use the Bayes classifier as follows
+	\begin{align*}
+	p(\omega_1|\pmb{x}) &= p(\omega_2|\pmb{x}) \iff \\ \frac{p(\pmb{x}|\omega_1)p(\omega_1)}{p(\pmb{x})} &= \frac{p(\pmb{x}|\omega_2)p(\omega_2)}{p(\pmb{x})}  \iff \\ p(\pmb{x}|\omega_1) &= p(\pmb{x}|\omega_2) \iff \\
+	\frac{1}{\sqrt{(2\pi)^2}|\pmb{\Sigma}|}e^{-\frac{(\pmb{x}-\pmb{\mu_1})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_1}})}{2}} &= \frac{1}{\sqrt{(2\pi)^2}|\pmb{\Sigma}|}e^{-\frac{(\pmb{x}-\pmb{\mu_2})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_2}})}{2}} \iff \\
+	(\pmb{x}-\pmb{\mu_1})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_1}}) &= (\pmb{x}-\pmb{\mu_2})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_2}}) \iff \\
+	\frac{1}{2\sigma^2} ||\pmb{x}-\pmb{\mu_1}||^2 &= \frac{1}{2\sigma^2} ||\pmb{x}-\pmb{\mu_2}||^2 \iff \\
+	||\pmb{x}-\pmb{\mu_1}||^2 &= ||\pmb{x}-\pmb{\mu_2}||^2
+	\end{align*}
+	\item From (a) we have that
+	\begin{align*}
+	(\pmb{x}-\pmb{\mu_1})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_1}}) &= (\pmb{x}-\pmb{\mu_2})^T\pmb{\Sigma}^{-1}(\pmb{x - \pmb{\mu_2}}).
+	\end{align*}
+	If $\Sigma \neq \sigma^2 I$,
+	\begin{align*}
+	\pmb{x}^T \pmb{\Sigma}^{-1}\pmb{x} - \pmb{x}^T \pmb{\Sigma}^{-1}\pmb{\mu_1} - \pmb{\mu_1}^T \pmb{\Sigma}^{-1}\pmb{x} + \pmb{\mu_1}^T \pmb{\Sigma}^{-1}\pmb{\mu_1}  &= \pmb{x}^T \pmb{\Sigma}^{-1}\pmb{x} - \pmb{x}^T \pmb{\Sigma}^{-1}\pmb{\mu_2} - \pmb{\mu_2}^T \pmb{\Sigma}^{-1}\pmb{x} + \pmb{\mu_2}^T \pmb{\Sigma}^{-1}\pmb{\mu_2} \\
+	2\pmb{x}^T \pmb{\Sigma}^{-1}(\pmb{\mu_1} - \pmb{\mu_2}) +  \pmb{\mu_1}^T \pmb{\Sigma}^{-1}\pmb{\mu_1} - \pmb{\mu_2}^T \pmb{\Sigma}^{-1}\pmb{\mu_2} &= 0 
+	\end{align*}
+	We can see that the decision boundary passes $\frac{1}{2}(\pmb{\mu_1}-\pmb{\mu_2})$.
+\end{enumerate}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
