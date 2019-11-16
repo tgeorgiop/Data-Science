@@ -1,0 +1,154 @@
+\documentclass[12pt]{book}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{commath}
+\usepackage{bbm}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+
+\begin{center}
+{\Large Machine Learning and Computational Statistics}\\
+\large\textbf{Theodoros Georgiopoulos}\\ %You should put your name here
+\Large Homework 9 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\begin{center}
+	\subsection*{Exercises for Unit 9: Support Vector Machines}
+\end{center}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 1}}
+\vspace{0.1 cm}
+
+\noindent
+
+Consider a hyperplane $L$ defined by the equation $\theta_0 + \pmb{\theta}^T\pmb{x} = 0$.
+For SVM problem, we want to maximize the distance of our data points from this decision boundary. The signed distance of any point $\pmb{x}$ to $L$ is given by $\frac{1}{\norm{\pmb{\theta}}}(\theta_0 + \pmb{\theta}^T\pmb{x} )$. If we have binary classification problem with $y\in\{-1,1\}$ and we have 2 decision boundaries, we have
+\begin{align*}
+\theta_0 + \pmb{\theta}^T\pmb{x}_i &\geq +1, \text{if  } y_i = +1 \\
+\theta_0 + \pmb{\theta}^T\pmb{x}_i &\leq -1, \text{if  } y_i = -1.
+\end{align*}
+This problem is equivalent to 
+\begin{align*}
+\min \frac{1}{2}\norm{\pmb{\theta}}^2 \ \ \ \ \ \  \ \ \ \ \  \ \  \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \  \ \  \ \\
+\text{subject to }y_i(\pmb{\theta}^T\pmb{x}_i + \theta_0) \geq 1, i=1,\dots,N.
+\end{align*}
+\begin{enumerate}[label=(\alph*)]
+	\item The Lagrangian function is given by
+	\begin{align*}
+	L(\pmb{\theta},\theta_0,\lambda) = \frac{1}{2}\norm{\pmb{\theta}}^2 - \sum_{i=1}^{N}\lambda_i \left[  y_i(\pmb{\theta}^T\pmb{x}_i + \theta_0) -1 \right].
+	\end{align*}
+	Taking derivatives with respect to $\pmb{\theta}$ and $\theta_0$ and setting them to zero, gives
+	\begin{align}
+	\frac{\partial L}{\pmb{\theta}} = 0 & \iff \pmb{\theta} = \sum_{i=1}^{N}\lambda_i y_i \pmb{x}_i  \\
+	\frac{\partial L}{\theta_0} = 0 & \iff  \sum_{i=1}^{N}\lambda_i y_i = 0
+	\end{align}
+	\item Using (1),(2) to the Lagrangian function gives
+	\begin{align*}
+	L(\pmb{\theta},\theta_0,\lambda) &= \frac{1}{2} \left( \sum_{i=1}^{N}\lambda_i y_i \pmb{x}_i \right)^T \sum_{i=1}^{N}\lambda_i y_i \pmb{x}_i  - \sum_{i=1}^{N}\lambda_i \left[  y_i\left(\left(\sum_{j=1}^{N}\lambda_j y_j \pmb{x}_j \right)^T\pmb{x}_i + \theta_0\right) -1 \right] \\
+	&= \frac{1}{2}  \sum_{i=1}^{N} \sum_{j=1}^{N}\lambda_i \lambda_j y_i y_j \pmb{x}_i^T \pmb{x}_i - \sum_{i=1}^{N} \sum_{j=1}^{N}\lambda_i \lambda_j y_i y_j \pmb{x}_i^T \pmb{x}_i - \sum_{i=1}^{N}\lambda_i y_i \theta_0 + \sum_{i=1}^{N}\lambda_i \\
+	&= -\frac{1}{2}  \sum_{i=1}^{N} \sum_{j=1}^{N}\lambda_i \lambda_j y_i y_j \pmb{x}_i^T \pmb{x}_i  + \sum_{i=1}^{N}\lambda_i.
+	\end{align*}
+	\item So, the Wolfe dual representation is
+	\begin{align*}
+	\max_{\lambda\ge 0} \sum_{i=1}^{N}\lambda_i - \frac{1}{2}  \sum_{i=1}^{N} \sum_{j=1}^{N}\lambda_i \lambda_j y_i y_j \pmb{x}_i^T \pmb{x}_i \\ \text{subject to} \sum_{i=1}^{N}\lambda_i y_i = 0 , \ \ i=1,\dots,N. \ \  \ \ \
+	\end{align*}
+\end{enumerate}
+
+
+
+\vspace{0.3 cm}
+{\underline{\large Solution for exercise 2}}
+\vspace{0.3 cm}
+
+We consider a two-class two-dim. problem where $\omega_1 = +1$ consists of $\pmb{x}_1=[-1,1]^T, \pmb{x}_2=[-1,-1]^T$, while class $\omega_2=-1$ consists of $\pmb{x}_3=[1,-1]^T, \pmb{x}_4=[1,1]^T$.
+
+\begin{enumerate}[label=(\alph*)]
+	\item The data points are depicted bellow.
+	
+	\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \includegraphics[scale=0.6]{4.png}
+	\item Using the dual representation of the SVM problem, the lagrange function becomes 
+	\begin{align*}
+	L = \lambda_1 + \lambda_2 + \lambda_3 + \lambda_4 - \lambda_1^2 - \lambda_2^2 - \lambda_3^2 - \lambda_4^2 - 2\lambda_1\lambda_3 - 2 \lambda_2\lambda_4.
+	\end{align*}
+	Taking the derivatives and setting them to zero, gives
+	\begin{align}
+	\lambda_1+\lambda_3&=\frac{1}{2}, \\
+	\lambda_2 + \lambda_4 &= \frac{1}{2}.
+	\end{align}
+	From $\sum_{i=1}^{N}\lambda_i y_i= 0$, we have
+	\begin{align}
+	\lambda_1 + \lambda_2 = \lambda_3 + \lambda_4.
+	\end{align}
+	From (3),(4),(5) we have
+	\begin{align}
+	\lambda_1 &= \lambda_4 \\
+	\lambda_2 &= \lambda_3.
+	\end{align}
+	From (3),(4),(6),(7) and the fact that $\lambda\ge0$ we have that $\lambda_1=\lambda_4=u$ and $\lambda_2=\lambda_3=1-u$. From (1), we can find $\theta$ as follows
+	\begin{align*}
+	\pmb{\theta} = \sum_{i=1}^{N}\lambda_i y_i \pmb{x}_i = u[-1,1]^T + u[-1,-1]^T - (1-u)[1,-1]^T - (1-u)[1,1]^T = [-1,0]^T.
+	\end{align*}
+	From KKT we have that
+	\begin{align*}
+	\lambda_i \left[  y_i(\pmb{\theta}^T\pmb{x}_i + \theta_0) -1 \right] = 0, \forall i 
+	\end{align*}
+	and substituting the values of $y_i,\pmb{\theta},\pmb{x}_i$ gives $\theta_0=0$. So, the classification line is
+	\begin{align*}
+	x_0 = 0.
+	\end{align*}
+\end{enumerate}
+
+\vspace{0.3 cm}
+{\underline{\large Solution for exercise 3}}
+\vspace{0.3 cm}
+
+Assume that the points are linear separable between the two classes $\omega_1=1$ and $\omega_2=0$. The feature space is 3-dim, so the hyperplane equation is
+\begin{align*}
+f(x) = \theta_0 + \theta_1x_1 + \theta_2x_2 + \theta_3x_3.
+\end{align*}
+For the data points belonging to $\omega_1$ we have that $f(x)>0$ and for $\omega_2$ we have that $f(x)<0$. Substituting $x_1,x_2,x_3$ gives
+\begin{align}
+\theta_0>0 \\ \theta_0 + \theta_3<0 \\\theta_0 + \theta_2<0 \\ \theta_0 + \theta_2+\theta_3<0 \\\theta_0 + \theta_1<0 \\\theta_0 + \theta_1+\theta_3<0 \\ \theta_0 + \theta_1+\theta_2<0 \\ \theta_0+ \theta_1 + \theta_2 + \theta_3 >0.
+\end{align}
+From (9),(10),(12),(15) we have that $2\theta_0<0$ which contradicts (8). So, our data are not linear separable.
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
