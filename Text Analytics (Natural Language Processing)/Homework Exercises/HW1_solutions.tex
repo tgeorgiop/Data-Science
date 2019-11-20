@@ -1,0 +1,329 @@
+\documentclass[12pt]{article}
+
+%These tell TeX which packages to use.
+\usepackage{array,epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{hyperref}
+\hypersetup{colorlinks,urlcolor=blue}
+\usepackage{enumerate}
+\usepackage{csquotes}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+
+%Pagination stuff.
+\setlength{\topmargin}{-.3 in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9.in}
+\setlength{\textwidth}{6.5in}
+\pagestyle{empty}
+
+\setlength\parindent{0pt}
+\usepackage{enumerate}
+
+\begin{document}
+
+\begin{center}
+{\Large Text Analytics and Engineering}\\
+%\large\textbf{Maria Eugenia Stamouli \\ Manolis Papageorgiou \\ Theodoros Georgiopoulos}\\ %You should put your name here
+
+\Large Assignment 1 %You should write the date here.
+\end{center}
+
+\vspace{0.2 cm}
+\large{Maria Eugenia Stamouli, Manolis Papageorgiou, Theodoros Georgiopoulos}
+
+\vspace{0.2 cm}
+\subsection*{Exercises on n-gram language models, spelling correction, text normalization}
+\vspace{0.2 cm}
+
+{\underline{\large Solution for exercise 4}}
+\vspace{0.1 cm}
+
+\section{Preprocessing}
+
+First of all, we loaded our corpus, which is taken from the European Parliament (\href{http://www.statmt.org/europarl/}{http://www.statmt.org/europarl/}) and consists of 9672 text files containing a total of 66970937 words. The following steps were taken:
+
+\begin{enumerate}[Step 1:]
+	\item After loading the corpus we split it to sentences.
+	\item We remove the html tags because they are adding noise in our data.
+	\item We create a list of all the sentences tokenised.
+	\item We split our corpus to 60\% training, 20\% development, and 20\% testing dataset. By splitting our corpus we mean splitting the aforementioned list of tokenised sentences. We will use the training dataset to train our models, the development dataset to tune the hyperparameters, and the testing to test how our models perform to unseen data.
+\end{enumerate}
+
+Now we have 3 separate datasets:
+\begin{itemize}	
+	\item Training Dataset:	1367841 tokenised sentences	
+	\item Development Dataset: 455947 tokenised sentences	
+	\item Testing Set: 455947 tokenised sentences	
+\end{itemize}
+
+\section{Vocabulary}
+The following steps were taken:
+\begin{enumerate}[Step 1:]
+	\item We extract the tokens from the Training Dataset.
+	\item We create a dictionary containing the frequency of appearance of each token \textbf{in the Training Dataset}.
+	\item We find that there are 199549 tokens occurring less than 10 times in the training dataset and we
+	rename these tokens to String *UNK*. These are the “Out Of Vocabulary” words that we subtract in
+	a way from our dataset because their very rare appearance indicates that they are words to be left
+	out of our Vocabulary(e.g.\ misspelled words).
+	\item We recalculate the frequency of appearance of the new training tokens(after the renaming).
+	\item We create our Vocabulary from the distinct tokens of the new training dataset.
+	\begin{itemize}	
+		\item Training tokens: 37178640
+		\item Vocabulary size: 29613	
+		\item Total Out Of Vocabulary words: 210232	
+	\end{itemize}
+	\item We replace the Out Of Vocabulary words with the String *UNK* \textbf{in all datasets}.
+\end{enumerate}
+
+\section{Training phase}
+The following steps were taken:
+\begin{enumerate}[Step 1:]
+	\item We reform the sentences of the training dataset to start with the pseudo-token *start* (or the
+	pseudo-tokens *start1*, *start2* for the trigram model) and pseudo-token *end* at the end of the
+	each sentence.
+	\item We create unigrams, bigrams and trigrams from the tokenised sentences of the training dataset.
+\end{enumerate}
+
+\section{Hyperparameter tuning}
+At this part we will find the best alpha parameter in order to do Laplace Smoothing at the probabilities calculation. The metrics used to evaluate our models are \textbf{Cross-Entropy} and \textbf{Perplexity}.
+
+\subsection{Bigram model}
+
+At first we defined a range for alpha from 0.00001 to 0.01.
+\vspace{1cm}
+
+\includegraphics[scale=0.4]{1.png}
+	
+\vspace{1cm}
+
+We observe a global minimum of alpha at value 0.00011. So, we define a new range (0.00001 to 0.0002) around that value to find a better alpha.
+	
+
+
+\vspace{1cm}
+
+\includegraphics[scale=0.4]{2.png}
+	
+\vspace{1cm}
+
+Again, we observe a smoother turning point of our plot. So, the best alpha is 0.00008.
+From the previous tunings we have these results:
+
+\vspace{1cm}
+
+\textbf{First tuning phase}
+\begin{itemize}
+	\item Best alpha: 0.00011
+	\item Best perplexity: 70.2792
+\end{itemize}
+
+\textbf{Second tuning phase}
+\begin{itemize}
+	\item Best alpha: 0.00008
+	\item Best perplexity: 70.2725
+\end{itemize}
+
+\vspace{1cm}
+
+\textbf{The best alpha and perplexity for the bigram model}:
+
+$Alpha = 0.00008$ \\
+$Perplexity =70.2725$
+
+\vspace{5cm}
+
+
+\subsection{Trigram model}
+
+We test alpha wide ranges:
+
+$Alpha=0.000001  - Perplexity= 142.4478844834341$ \\
+$Alpha=0.00001 \hspace{0.25cm} - Perplexity= 108.20193428877532$ \\
+$Alpha=0.00005 \hspace{0.25cm} - Perplexity= 91.5006902473306$ \\
+$Alpha=0.0001 \hspace{0.5cm}  - Perplexity= 86.45130755975666$ \\
+$Alpha=0.0005 \hspace{0.5cm}  - Perplexity= 80.78492649459189$ \\
+$Alpha=0.001 \hspace{0.75cm}  - Perplexity= 81.5504851016993$ \\ 
+$Alpha=0.005 \hspace{0.75cm}  - Perplexity= 94.52326748857114$ \\
+
+For the tuning of the trigram model we now look at range 0.0001 - 0.001.
+
+\vspace{1cm}
+
+\includegraphics[scale=0.4]{3.png}
+
+\vspace{1cm}
+
+There is a turning point at our plot around alpha=0.0006 which gives the best perplexity.
+
+\vspace{0.5cm}
+
+
+
+\textbf{The best alpha and perplexity for the trigram model}:
+
+$Alpha = 0.0006$ \\
+$Perplexity = 80.77$
+
+
+\subsection{Interpolated model}
+
+We will combine our bigram and trigram models to a new interpolated one to see its performance. Now we
+know the alpha values of the previous models and we are looking for the best lambda value which is the
+hyperparameter of the interpolated model. The range of lambda is set from 0 to 1.
+
+\vspace{1cm}
+
+\includegraphics[scale=0.4]{4.png}
+
+\vspace{1cm}
+
+So the best lamda is lamda=0 which means that our Interpolated Model is tuned to give
+absolute weight to the best of our previous models which is the Bigram Model.
+
+\subsection{Final results}
+
+Bigram model \hspace{1cm}- $Alpha=0.00008, \ Perplexity = 70.27$ \\
+Trigram model \hspace{0.7cm} - $Alpha =0.0006, \ \ Perplexity = 81.7631$ \\
+Interpolated model - $Lamda =0, \ \ \ \ \ \ \ Perplexity = 70.27$ \\
+
+Between our three Language Models, we will proceed with the one which brought the best
+results which is the Bigram Model.
+Choosing the Interpolated Model with lamda=0 is the same as choosing the Bigram Model
+itself.
+
+\newpage
+
+\section{Testing}
+
+Firstly, we will test the performance of our models in the testing dataset, evaluating the language
+model’s cross-entropy and perplexity :
+
+\vspace{0.5cm}
+
+Bigram Model  \ - $Cross Entropy= 6.133, Perplexity= 70.194$ \\
+Trigram Model - $Cross Entropy= 6.483, Perplexity= 89.423$
+
+\vspace{0.5cm}
+
+Now, we will check the log-probabilities of the trained model return when given (correct) sentences
+from the test subset vs. (incorrect) sentences of the same length (in words) consisting of randomly
+selected vocabulary words.
+
+\vspace{0.5cm}
+
+\textbf{Test 1}
+
+Correct sentence: \enquote{I want to test my language model} \\
+Incorrect sentence: \enquote{want I language to model my test} \\
+
+
+\{'I', 'want', 'to', 'test', 'my', 'language', 'model'\} \\
+I want: 0.0133 \\
+want to: 0.655 \\
+to test: 0.000117 \\
+test my: 0.000702 \\
+my language: 0.000345 \\
+language model: $2.92 \times 10^{-14}$
+\\
+
+ Total Log-Probability -86.9 \\
+or Probability: $1.9053028193842023 \times 10^{-38} $ \\
+
+\{'want', 'I', 'language', 'to', 'model', 'my', 'test'\} \\
+want I: $3.89 \times 10^{-05}$ \\
+I language: $2.8\times 10^{-16}$ \\
+language to: 0.0161 \\
+to model: $6.33\times 10^{-06}$ \\
+model my: $2.24\times 10^{-14}$ \\
+my test: $2.03\times 10^{15}$ \\
+\\
+ Total Log-Probability $= -184.0$ \\
+or Probability $= 1.6625803562760259 \times 10^{-80}$
+\\
+\textbf{Test 2}
+
+Correct sentence: \enquote{I know that I know nothing} \\
+Incorrect sentence: \enquote{know I that nothing I know} \\
+\\
+\{'I', 'know', 'that', 'I', 'know', 'nothing'\} \\
+I know: 0.00936 \\
+know that: 0.292 \\
+that I: 0.0216 \\
+I know: 0.00936 \\
+know nothing: 0.00248 \\
+\\
+Total Log-Probability $= -29.4$ \\
+or Probability $= 1.6291672249976964\times 10^{-13}$ \\
+
+\{'know', 'I', 'that', 'nothing', 'I', 'know'\}
+know I: 0.00271 \\
+I that: 1.68e-05 \\
+that nothing: 0.000493nothing I 0.00196 \\
+I know: 0.00936 \\
+\\
+Total Log-Probability $= -51.1$ \\
+or Probability $= 6.356242254746746 \times 10^{-23}$
+\\
+\\
+\textbf{Test 3}
+
+We will test the sentences with just 2 words swapped
+\\
+
+Correct sentence: \enquote{I know that I know nothing} \\
+Incorrect sentence: \enquote{know I that nothing I know} \\
+\\
+\{'I', 'know', 'that', 'I', 'know', 'nothing'\} \\
+I know: 0.00936 \\
+know that: 0.292 \\
+that I: 0.0216 \\
+I know: 0.00936 \\
+know nothing: 0.00248 \\
+\\
+Total Log-Probability $= -29.4$ \\
+or Probability $= 1.6291672249976964 \times 10^{-13}$ \\
+\\
+\{'I', 'know', 'that', 'I', 'nothing', 'know'\} \\
+I know: 0.00936 \\
+know that: 0.292 \\
+that I: 0.0216 \\
+I nothing: $2.8 \times 10^{-16}$ \\
+nothing know: $1.51\times 10^{-14}$ \\
+\\
+ Total Log-Probability $= -112.0$
+ \\
+ 
+\textbf{Test 4}
+
+We will test a big sentence with just 2 words swap (the last 2 words swapped).
+\\
+
+Correct sentence: \enquote{Plato mentions intelligence as a cosmic causal principle in the so-called
+autobiographical passage of the Phaedo, the appearance of intelligence there is short-lived,
+however, Socrates says that he did not find in Anaxagoras’ book the account he wanted of
+intelligence’s responsibility for the world and its arrangement.} \\
+Incorrect sentence: \enquote{Plato mentions intelligence as a cosmic causal principle in the so-called
+autobiographical passage of the Phaedo, the appearance of intelligence there is short-lived,
+however, Socrates says that he did not find in Anaxagoras’ book the account he wanted of
+intelligence’s responsibility for the world and arrangement its.} \\
+\\
+Total Log-Probability $= -873.0$ for the correct sentence. \\
+Total Log-Probability $=-879.0$ for the incorrect sentence.
+\\
+\\
+So, after all, our model works fine.	
+\end{document}
+
+
